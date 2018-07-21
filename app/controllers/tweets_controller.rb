@@ -1,18 +1,30 @@
+require 'pry'
 class TweetsController < ApplicationController
 
   get '/tweets' do
-    @user = current_user
-
-    erb :'/tweets/tweets'
+    if logged_in?
+      @user = User.find_by(id: session[:user_id])
+      erb :'/tweets/tweets'
+    else
+      redirect to("/login")
+    end
   end
 
   get '/tweets/new' do
-    erb :'/tweets/create_tweet'
+    if logged_in?
+      erb :'/tweets/create_tweet'
+    else
+      redirect to("/login")
+    end
   end
 
   post '/tweets' do
-    @tweet = Tweet.create(content: params[:tweet][:content], user_id: User.find_by(username: params[:tweet][:user][:username]).id)
-    redirect to "/tweets/#{@tweet.id}"
+    if params[:content].empty?
+      redirect to("/tweets/new")
+    else
+      @tweet = Tweet.create(content: params[:tweet][:content])
+      redirect to("/tweets/#{@tweet.id}")
+    end
   end
 
   get '/tweets/:id' do
@@ -28,19 +40,27 @@ class TweetsController < ApplicationController
 
   patch '/tweets/:id' do
     @tweet = Tweet.find(params[:id])
-    @tweet.content = params[:tweet][:content]
+
+    if !params[:tweet][:content].empty
+      @tweet.content = params[:tweet][:content]
+      @tweet.save
+    else
+      redirect to("/tweets/#{@tweet.id}/edit")
+    end
+
     @tweet.user.username = params[:tweet][:user][:username]
     @tweet.save
-    redirect to "/tweets/#{@tweet.id}"
+
+    redirect to("/tweets/#{@tweet.id}")
   end
 
   delete 'tweets/:id/delete' do
     @tweet = Tweet.find(params[:id])
     if logged_in?
       @tweet.destroy
-      redirect to "/tweets"
+      redirect to("/tweets")
     else
-      redirect to "/login"
+      redirect to("/login")
     end
   end
 
