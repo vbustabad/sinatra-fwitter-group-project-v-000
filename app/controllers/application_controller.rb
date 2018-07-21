@@ -1,3 +1,4 @@
+require 'pry'
 require './config/environment'
 
 class ApplicationController < Sinatra::Base
@@ -18,19 +19,24 @@ class ApplicationController < Sinatra::Base
   end
 
   post '/signup' do
-    params["user"].each do |attr|
-      if attr.empty?
-        redirect '/signup'
-      end
+
+    if params["username"].empty?
+      redirect to '/signup'
+    elsif params["email"].empty?
+      redirect to '/signup'
+    elsif params["password"].empty?
+      redirect to '/signup'
+    else
+      @user = User.create(username: params["username"], email: params["email"], password: params["password"])
+      session[:user_id] = @user.id
     end
 
-    @user = User.new(username: params["username"], email: params["email"], password: params["password"])
-    if @user.save
-      session[:user_id] = @user.id
-      redirect to '/tweets'
+    if !logged_in?
+      redirect to "/signup"
     else
-      redirect to '/signup'
+      redirect to "/tweets"
     end
+
   end
 
   helpers do
@@ -39,7 +45,7 @@ class ApplicationController < Sinatra::Base
       User.find(session[:user_id])
     end
 
-    def is_logged_in?
+    def logged_in?
       !!session[:user_id]
     end
 
