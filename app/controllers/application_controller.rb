@@ -24,9 +24,8 @@ class ApplicationController < Sinatra::Base
       end
     end
 
-    @user = User.new(params["user"])
-    if @user && @user.authenticate(params["user"]["password"])
-      @user.save
+    @user = User.new(username: params["username"], email: params["email"], password: params["password"])
+    if @user.save
       session[:user_id] = @user.id
       redirect to '/tweets'
     else
