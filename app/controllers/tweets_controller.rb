@@ -1,10 +1,17 @@
 class TweetsController < ApplicationController
 
+  get '/tweets' do
+    erb :'/tweets/tweets'
+  end
+
   get '/tweets/new' do
-    erb :'/tweets/new'
+    erb :'/tweets/create_tweet'
   end
 
   post '/tweets' do
+    @tweet = Tweet.create(params["tweet"])
+
+    redirect to "/tweets/#{@tweet.id}"
   end
 
   get '/tweets/:id' do

@@ -6,41 +6,16 @@
 
   <br></br>
 
-  <label for="figure_name">Content:</label>
-  <input type="text" name="figure[name]" id="figure_name">
+  <label for="content">Content:</label>
+  <input type="text" name="tweet[content]" id="content">
 
   <br></br>
 
-  <label for="title_name">Title Name:</label>
-  <input type="text" name="title[name]" id="new_title">
+  <label for="user_id">User ID:</label>
+  <input type="text" name="tweet[user_id]" id="user_id">
 
   <br></br>
 
-  <label>Titles:</label>
-
-  <br></br>
-
-  <% Title.all.each do |title| %>
-    <input type="checkbox" id="title_<%=title.id%>" name="figure[title_ids][]" value="<%= title.id %>"><%= title.name %>
-  <% end %>
-
-  <br></br>
-
-  <label for="landmark_name">Landmark Name:</label>
-  <input type="text" name="landmark[name]" id="new_landmark">
-
-  <br></br>
-
-  <label>Landmarks:</label>
-
-  <br></br>
-
-    <% Landmark.all.each do |landmark| %>
-      <input type="checkbox" id="landmark_<%=landmark.id %>" name="figure[landmark_ids][]" value="<%= landmark.id %>"><%= landmark.name %>
-    <% end %>
-
-  <br></br>
-
-  <input type="submit" value="Create New Figure">
+  <input type="submit" value="submit">
 
 </form>

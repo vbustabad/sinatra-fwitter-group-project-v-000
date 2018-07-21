@@ -26,17 +26,24 @@ class ApplicationController < Sinatra::Base
 
     @user = User.new(params["user"])
     if @user && @user.authenticate(params["user"]["password"])
+      session[:user_id] = @user.id
       @user.save
-      redirect '/tweets/index'
+      redirect to '/tweets'
     else
-      redirect '/signup'
+      redirect to '/signup'
     end
   end
 
-  def current_user
-  end
+  helpers do
 
-  def logged_in?
+    def current_user
+      User.find(session[:user_id])
+    end
+
+    def is_logged_in?
+      !!session[:user_id]
+    end
+
   end
 
 end
