@@ -9,21 +9,33 @@ class TweetsController < ApplicationController
   end
 
   post '/tweets' do
-    @tweet = Tweet.create(params["tweet"])
-
+    @tweet = Tweet.create(content: params[:tweet][:content], user_id: User.find_by(username: params[:tweet][:user][:username]).id)
     redirect to "/tweets/#{@tweet.id}"
   end
 
   get '/tweets/:id' do
+    @tweet = Tweet.find(params["id"])
+
+    erb :'/tweets/show_tweet'
   end
 
   get '/tweets/:id/edit' do
+    @tweet = Tweet.find(params[:id])
+    erb :'/tweets/edit_tweet'
   end
 
-  post '/tweets/:id' do
+  patch '/tweets/:id' do
+    @tweet = Tweet.find(params[:id])
+    @tweet.content = params[:tweet][:content]
+    @tweet.user.username = params[:tweet][:user][:username]
+    @tweet.save
+    redirect to "/tweets/#{@tweet.id}"
   end
 
-  post 'tweets/:id/delete' do
+  delete 'tweets/:id/delete' do
+    @tweet = Tweet.find(params[:id])
+    @tweet.destroy
+    redirect to "/tweets"
   end
 
 end
