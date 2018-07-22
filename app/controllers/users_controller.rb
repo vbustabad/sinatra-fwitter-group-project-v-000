@@ -3,14 +3,22 @@ class UsersController < ApplicationController
 
   session = {}
 
-  get '/login' do
+  get '/users/new' do
+    erb :'/users/create_user'
+  end
 
+  post '/users' do
+    @user = User.create(username: params[:username], email: params[:email], password: params[:password])
+
+    redirect to("/users/#{@user.slug}")
+  end
+
+  get '/login' do
     if logged_in?
       redirect to("/tweets")
     else
       erb :'/users/login'
     end
-
   end
 
   post '/login' do
@@ -25,13 +33,18 @@ class UsersController < ApplicationController
 
   end
 
+  get '/users/#{user.slug}' do
+    @user = User.find_by_slug(slug)
+    erb :'/users/show'
+  end
+
   get '/logout' do
     if logged_in?
-
+      redirect to("/tweets")
+    else
       session.clear
       redirect to("/login")
-    else
-      redirect to("/")
+      # redirect to("/")
     end
   end
 

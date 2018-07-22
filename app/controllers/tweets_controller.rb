@@ -25,6 +25,7 @@ class TweetsController < ApplicationController
     else
       @user = User.find_by(id: session[:user_id])
       @tweet = Tweet.create(content: params[:tweet][:content], user_id: @user.id)
+
       redirect to("/tweets/#{@tweet.id}")
     end
   end
@@ -69,8 +70,10 @@ class TweetsController < ApplicationController
 
   delete 'tweets/:id/delete' do
     @tweet = Tweet.find(params[:id])
+
     if logged_in?
       @tweet.destroy
+
       redirect to("/tweets")
     else
       redirect to("/login")

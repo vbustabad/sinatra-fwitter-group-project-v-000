@@ -52,6 +52,12 @@ class ApplicationController < Sinatra::Base
       !!session[:user_id]
     end
 
+    def self.find_by_slug(slug)
+      self.all.each do |element|
+        slug == element.slug
+      end
+    end
+
   end
 
 end
