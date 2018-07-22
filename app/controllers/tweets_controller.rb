@@ -42,6 +42,7 @@ class TweetsController < ApplicationController
   end
 
   get '/tweets/:id/edit' do
+    binding.pry
     @tweet = Tweet.find(params[:id])
     @user = User.find_by(id: session[:user_id])
 
